@@ -25,6 +25,11 @@ public class Util {
 		binary = binaryBuilder.toString();
 		return binary;
 	}
+	
+	public static String toBinary(int value) {
+		String binary = Long.toBinaryString(value & 0xffffffffL | 0x100000000L ).substring(1);
+		return binary;
+	}
 
 	//Convert binaryString to text string
 	public static String fromStringBinary(String field) {

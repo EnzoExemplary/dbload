@@ -14,11 +14,21 @@ public class dbquery {
 	        System.exit(1);
 	    }
 		
-		String searchText = args[0];
+		String searchText = args[0].toString();
 		String pageSizeStr = args[1];
-		String filename = "heap." + pageSizeStr + ".txt";
-		String searchTextBinary = toBinary(searchText);
+		String filename = ("heap." + pageSizeStr + ".txt");
 		HeapFile heap;
+		
+		//Convert Search Text to appropriate binary
+		
+		int startIndex = (searchText.length() - 1);
+		int endIndex = searchText.length();
+		while(searchText.charAt(startIndex) != ' ') {
+			--startIndex;
+		}
+		int sensorID = Integer.parseInt(searchText.substring(++startIndex, endIndex));
+		String searchTextBinary = (Util.toBinary(searchText.substring(0, startIndex)) 
+				+ Util.toBinary(sensorID)); 
 		
 		try {
 			//Parse page size
@@ -37,14 +47,24 @@ public class dbquery {
 	    		//Ignore first two lines
 	    		if(i < 2) {
 	    			++i;
+	    		} else if(line.equals("") || line.equals("\n")) {
+	    			++i;
 	    		} else {
-	    			String record = heap.loadBinaryRecord(line, searchTextBinary);
+	    			String record = heap.loadBinaryRecord(line);
 	    			if(!(record.equals(""))) {
 	    				matchingRecords.add(record);
 	    			}
 	    		}
 	    	}
 			
+	    	//Print out matching records to console (if any)
+	    	System.out.println("Records found matching search '" + searchText + "':");
+	    	for(String record : matchingRecords) {
+	    		System.out.println(record);
+	    	}
+	    	
+	    	br.close();
+	    	fr.close();
 			
 		} catch (NumberFormatException e) {
 			System.err.println("Invalid page size");
@@ -57,26 +77,4 @@ public class dbquery {
 			System.exit(1);
 		}
 	}
-	
-	private static String toBinary(String searchText) { 
-		String binary = "";
-		
-		byte[] bytes = searchText.getBytes();
-		StringBuilder binaryBuilder = new StringBuilder();
-		
-		for(byte b : bytes) {
-			int value = b;
-			
-			int i = 0;
-			while(i < 8) {
-				binaryBuilder.append((value & 128) == 0 ? 0 : 1);
-				value <<= 1;
-				++i;
-			}
-		}
-		
-		binary = binaryBuilder.toString();
-		return binary;
-	}
-
 }
