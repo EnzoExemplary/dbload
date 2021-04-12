@@ -1,5 +1,7 @@
 package main;
 
+import java.util.Arrays;
+
 public class Util {
 
 	//Convert searchText to a binary string
@@ -22,6 +24,28 @@ public class Util {
 		
 		binary = binaryBuilder.toString();
 		return binary;
+	}
+
+	//Convert binaryString to text string
+	public static String fromStringBinary(String field) {
+		String string = ""; 
+		
+		int beginIndex = 0;
+		int endIndex = 7;
+		while(!(endIndex > field.length())) {
+			int charCode = fromIntBinary(field.substring(beginIndex, endIndex));
+			string += (new Character((char)charCode));
+			
+			beginIndex += 8;
+			endIndex += 8;
+		}
+		
+		return string;
+	}
+	
+	//Convert binaryString to integer
+	public static int fromIntBinary(String field) {
+		return Integer.parseInt(field, 2);
 	}
 	
 }
