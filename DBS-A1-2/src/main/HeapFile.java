@@ -129,6 +129,8 @@ public class HeapFile {
 		ArrayList<String> separatedBinary = new ArrayList<String>();
 		
 		separateString(line, BINARY_DELIMITER, separatedBinary);
+		Record record = new Record(separatedBinary);
+		pageDirectory.addRecord(record);
 		
 		//If record date_time & sensor_id columns match search, convert record and return as matching record
 		String relevantFields = separatedBinary.get(DATE_TIME_COLUMN) + BINARY_SPACE + separatedBinary.get(SENSOR_ID_COLUMN);
