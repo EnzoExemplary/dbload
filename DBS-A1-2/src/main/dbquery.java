@@ -1,5 +1,3 @@
-package main;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -20,7 +18,6 @@ public class dbquery {
 		HeapFile heap;
 		
 		//Convert Search Text to appropriate binary
-		
 		int startIndex = (searchText.length() - 1);
 		int endIndex = searchText.length();
 		while(searchText.charAt(startIndex) != ' ') {
@@ -31,6 +28,9 @@ public class dbquery {
 				+ Util.toBinary(sensorID)); 
 		
 		try {
+			//Start Timer
+			long startTime = System.nanoTime();
+			
 			//Parse page size
 			int pageSize = Integer.parseInt(pageSizeStr);
 			heap = new HeapFile(pageSize, searchTextBinary);
@@ -62,6 +62,12 @@ public class dbquery {
 	    	for(String record : matchingRecords) {
 	    		System.out.println(record);
 	    	}
+	    	
+	    	//End Timer
+	    	long endTime = System.nanoTime();
+	    	double runTime = ((double)(endTime - startTime)) / Math.pow(10, 6);
+	    	
+	    	System.out.println("\nTime to complete: " + runTime + "ms");
 	    	
 	    	br.close();
 	    	fr.close();
